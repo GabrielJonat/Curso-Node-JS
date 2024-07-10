@@ -1,0 +1,58 @@
+<div class="home-header">
+    {{#if search}}
+    <h1>Você está buscando por <span>{{search}}</span></h1>
+    <h2>resultados encontrados: {{qtyResults}}</h2>
+    <form action="/" method="get">
+        <input type="text" name="search" placeholder="Continuar buscando?" class="searchBar">
+        <input type="submit" value="Buscar" class="btn">
+    </form>
+    <div class="order-container">
+        <span>Ordenar por:</span>
+        <form action="/"  method="get">
+            <input type="hidden" name="search" value="{{this.search}}">
+            <input type="hidden" name="order" value="new"> 
+            <button type="submit">⬆️</button> 
+        </form>
+        <form action="/"  method="get">
+            <input type="hidden" name="search" value="{{this.search}}">
+            <input type="hidden" name="order" value="old"> 
+            <button type="submit">⬇️</button> 
+        </form>
+        <a href="/">Limpar</a>
+    </div>
+</div>
+    {{else}}
+    <h1>Todos os <span>Pensamentos</span>:</h1>
+    <form action="/" method="get">
+        <input type="text" name="search" placeholder="Está buscando por algo?" class="searchBar">
+        <input type="submit" value="Buscar" class="btn">
+    </form>
+    <div class="order-container">
+        <span>Ordenar por:</span>
+        <form action="/"  method="get">
+            <input type="hidden" name="search" value="{{this.search}}">
+            <input type="hidden" name="order" value="new"> 
+            <button type="submit">⬆️</button> 
+        </form>
+        <form action="/"  method="get">
+            <input type="hidden" name="search" value="{{this.search}}">
+            <input type="hidden" name="order" value="old"> 
+            <button type="submit">⬇️</button> 
+        </form>
+        <a href="/">Limpar</a>
+    </div>
+</div>
+    {{/if}}
+<div class="thoughts-container">
+    {{#each filteredThoughts}}
+        <figure>
+                 <blockquote>"{{this.title}}"</blockquote>
+                <figcaption>
+                    por
+                    <span>
+                    {{this.userName}}
+                    </span>
+                </figcaption>
+        </figure>
+    {{/each}}
+</div>

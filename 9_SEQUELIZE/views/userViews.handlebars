@@ -1,0 +1,32 @@
+<a href="/">voltar</a>
+
+<h2>{{user.name}}</h2>
+
+<p>{{user.occupation}}</p>
+
+<h3>Adress</h3>
+
+<p>{{adress.street}}</p>
+
+<p>{{adress.city}}</p>
+
+<p>{{adress.complement}}</p>
+
+<p>{{adress.number}}</p>
+
+<h3>Dependents</h3>
+
+<div class="dependentsList">
+    
+    {{#each user.Dependents}}
+    
+    <div>
+        <p>Nome: {{this.name}}</p>
+        <form action="/dependents/delete/{{this.id}}" method="post">
+            <input type="submit" value="Delete">
+        </form>    
+    </div>
+        
+    {{/each}}
+</div>
+

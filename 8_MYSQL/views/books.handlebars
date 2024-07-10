@@ -1,0 +1,10 @@
+<h1>Livros Disponíveis</h1>
+
+<a href="/">voltar</a>
+
+<ul>
+
+    {{#each books}}
+        <li> ID: {{this.id}} - <form action="/books/editbook/{{this.id}}" method="GET"><input type="submit" value="{{this.title}}"> <p>- {{this.pageqty}} páginas</p></form> </li>
+    {{/each}}
+</ul>

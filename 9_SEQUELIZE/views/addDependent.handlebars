@@ -1,0 +1,9 @@
+<h1>Add dependent of user {{user.name}}</h1>
+
+<form action="/users/addDependent/{{user.id}}" method="post" class="form">
+<div class="form-control">
+    <label for="name">Name:</label>
+    <input type="text" name="name" placeholder="Type in the name of the user's dependent">
+</div>
+<input type="submit" value="Add">
+</form>

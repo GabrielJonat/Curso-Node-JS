@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hora do Dia</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+                    body{
+                background: rgb(70, 142, 236);
+                font: normal 15pt Arial;
+            }
+            header{
+                color: white;
+                text-align: center;
+            }
+
+            section{
+                background: white;
+                border-radius: 10px;
+                padding: 15px;
+                width: 500px;
+                margin: auto;
+                box-shadow: 5px 5px 10px black;
+            }
+
+            div{
+                text-align: center;
+                padding: 8px;
+            }
+            footer{
+                color: white;
+                text-align: center;
+                font-style: italic;
+                padding: 5px;
+            }
+
+    </style>
+
+</head>
+<body onload="load()">
+    <header>
+        <h1>Hora do Dia</h1>
+    </header>
+    <section>
+        <div id = "msg">A imagem vai aparecer aqui...</div>
+        <div id="imagem"><img id="foto" src=""></div>
+    </section>
+    <footer>&copy; CursoemVideo</footer>
+    <script>
+
+        function load(){
+            var greetings
+            var msg = window.document.getElementById('msg')
+            var img = window.document.querySelector("img#foto")
+            var data = new Date()
+            var hora = data.getHours()
+            if(hora >= 6 && hora < 12){
+            greetings = "Bom dia!"
+            img.src = "https://th.bing.com/th/id/R.feddb769021274cfacd00500c381bced?rik=QaXbCxil7HBOSg&riu=http%3a%2f%2fwww.tootsuite.co.uk%2fwp-content%2fuploads%2fDawn.jpg&ehk=RlX%2fKjWMlgeE6HgVdFRo58IEqp5ChaLhdrB2RW4JdaU%3d&risl=&pid=ImgRaw&r=0"
+            document.body.style.backgroundColor = '#e2cd9f'
+            }
+            else if(hora < 18){
+            greetings = "Boa tarde!"
+            img.src = "https://th.bing.com/th/id/OIP.UfNlLjR1yTXphH2h_MkrFwHaEq?rs=1&pid=ImgDetMain"
+            document.body.style.background = '#b9846f'
+            }
+            else{
+            greetings = "Boa noite!"
+            img.src = "https://th.bing.com/th/id/OIP.vw_LGxyxk1tlpdu8JCKMswAAAA?rs=1&pid=ImgDetMain"
+            document.body.style.background = '#515154'
+            }
+
+            msg.innerHTML = `${greetings} Agora são ${hora} horas.`
+
+        }
+
+    </script>
+</body>
+</html>

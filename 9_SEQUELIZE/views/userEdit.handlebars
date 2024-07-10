@@ -1,0 +1,53 @@
+<h1>Edit user {{user.name}}</h1>
+
+<form action="/users/update/{{user.id}}" method="post" class="form">
+
+<div class="form-control">
+    <label for="name">Name:</label>
+    <input type="text" name="name" placeholder="Type in the user's name" value="{{user.name}}">
+</div>
+
+<div class="form-control">
+    <label for="occupation">Ocupation:</label>
+    <input type="text" name="occupation" placeholder="Type in the user's occupation" value="{{user.occupation}}">
+</div>
+
+<div class="form-control form-checkbox">
+
+    {{#if user.newsLetter}}
+    <input type="checkbox" name="newsLetter" placeholder="Newsletter?" checked>
+    {{else}}
+    <input type="checkbox" name="newsLetter" placeholder="Newsletter?">
+    {{/if}}
+    <label for="newsletter">Newsletter</label>
+</div>
+
+<h2>Adress:</h2>
+
+
+<div class="form-control">
+    <label for="street">street:</label>
+    <input type="text" name="street" placeholder="Type in the user's street" value="{{adress.street}}">
+</div>
+
+
+<div class="form-control">
+    <label for="city">city:</label>
+    <input type="text" name="city" placeholder="Type in the user's city" value="{{adress.city}}">
+</div>
+
+
+<div class="form-control">
+    <label for="complement">complement:</label>
+    <input type="text" name="complement" placeholder="Type in the user's occupation" value="{{adress.complement}}">
+</div>
+
+
+<div class="form-control">
+    <label for="number">number:</label>
+    <input type="text" name="number" placeholder="Type in the user's number" value="{{adress.number}}">
+</div>
+
+<input type="submit" value="Edit">
+
+</form>

@@ -1,0 +1,17 @@
+<p>O nome do usuário é {{user.nome}} {{user.sobrenome}} e ele tem {{user.idade}} anos.</p>
+
+{{#if aprovado}}
+
+<p>Parabéns, seu cadastro foi aprovado</p>
+
+{{else}}
+
+<p>Seu cadastro necessita de aprovação para possibilitar seu acesso total ao Sistema</p>
+
+{{/if}}
+
+{{#if auth}}
+
+<p>Você está autenticado <a href="/dashboard">clique aqui</a> para acessar a área de membros</p>
+
+{{/if}}
