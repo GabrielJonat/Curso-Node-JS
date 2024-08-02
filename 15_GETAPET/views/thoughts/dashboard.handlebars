@@ -1,0 +1,44 @@
+<div class="dashboard">
+
+    <div class="title-container">
+        
+        <h2>Dashboard</h2>
+        <a href="/thoughts/add" class="btn">Cadastrar Pet</a>
+
+    </div>
+    {{#if empty}}
+        <h3>Você ainda não cadastrou nenhum Pet</h3>
+    {{else}}
+        <h3>Aqui estão seus melhores amigos, {{user.name}}:</h3>
+        <ul>
+            {{#each thoughts}}
+            {{#if this.available}}
+            <li>
+                <span class="label">
+                    {{this.title}}
+                </span>
+                <span class="actions">
+                    {{#if this.case}}
+                    <a href="/thoughts/finishAdoption/{{this.id}}" class="btn" id="accept">Aceitar pedido de adoção</a>
+                    <a href="/thoughts/rejectAdoption/{{this.id}}" class="btn" id="reject">Rejeitar pedido de adoção</a>
+                    {{/if}}
+                    <a href="/thoughts/edit/{{this.id}}" class="btn">Editar</a>
+                    <form action="/thoughts/delete/{{this.id}}" method="post">
+                        <input type="submit" value="Excluir" class="btn" style="height: 60px;">
+                    </form>
+                </span>
+            </li>
+            {{else}}
+                <li>
+                <span class="label">
+                    {{this.title}}
+                </span>
+                <span class="actions">
+                    <p style="color: greenyellow; font-weight: bold; font-size: 30px; margin-right: 20px;">🦴🐕Adoção confirmada</p>
+                </span>
+            </li>
+            {{/if}}
+            {{/each}}
+        </ul>
+    {{/if}}
+</div>
