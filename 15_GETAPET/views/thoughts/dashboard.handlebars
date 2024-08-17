@@ -19,6 +19,7 @@
                 </span>
                 <span class="actions">
                     {{#if this.case}}
+                    <a href="/thoughts/profileId/{{this.requester}}" class="btn" id="accept">Visitar Perfil do requisitante</a>
                     <a href="/thoughts/finishAdoption/{{this.id}}" class="btn" id="accept">Aceitar pedido de adoção</a>
                     <a href="/thoughts/rejectAdoption/{{this.id}}" class="btn" id="reject">Rejeitar pedido de adoção</a>
                     {{/if}}

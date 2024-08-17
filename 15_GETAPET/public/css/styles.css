@@ -51,7 +51,7 @@
 }
 
 #navbar p{
-    margin-left: -1000px;
+    margin-left: -970px;
     font-family:'Franklin Gothic Medium';
     font-size: 40px;
     font-weight: bold;
@@ -419,8 +419,8 @@ form input[type='submit']:hover, .btn:hover{
 .msgField {
     height: 200%;
     width: 300px;
-    margin-left: 40%;
-    margin-right: 60%;
+    margin-left: 42%;
+    margin-right: 58%;
     padding: 0;
     font-family: sans-serif;
     background: grey;
@@ -572,4 +572,26 @@ form input[type='submit']:hover, .btn:hover{
 .msg-container .msg-remote{
 
     background-color: grey;
+}
+
+.profileBtn{
+
+    background-color: transparent;
+    color: green;
+    border: 2px solid greenyellow;
+    padding: .5em 1.2em;
+    margin-bottom: 1em;
+    font-size: 1em;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: .5s;
+    width: 150px;
+}
+
+.profileBtn:hover{
+
+    color: white;
+    background-color: greenyellow;
 }

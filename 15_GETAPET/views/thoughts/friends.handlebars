@@ -2,7 +2,7 @@
 
     <div class="title-container">
         
-        <h2>Contatos disponíveis</h2>
+        <h2 style="color: goldenrod;">Contatos disponíveis</h2>
     </div>
     {{#if empty}}
         <h3>Você ainda não possui contato com nenhum dono de Pet</h3>
@@ -10,12 +10,9 @@
         <h3>Converse com os donos dos seus futuros Pets e com os futuros donos dos seus, {{user.name}}:</h3>
         <ul>
             {{#each util}}
-            <li>
+            <li style="margin-top: 20px;">
                 <span class="label">
-                    <p style="font-size: 40px; font-weight: bold">Converse com:</p>
-                </span>
-                <span class="label">
-                    <a style="color: greenyellow; font-size: 20px;" href="/thoughts/chat/{{this}}">{{this}}</a>
+                    <a style="color: greenyellow; font-size: 20px; font-weight: bold" href="/thoughts/chat/{{this}}">{{this}}</a>
                 </span>               
             </li>
             {{/each}}

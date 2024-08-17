@@ -67,4 +67,3 @@ document.addEventListener('DOMContentLoaded', (event) => {
       chatWindow.scrollTop = chatWindow.scrollHeight; // Rola para o fim da janela de chat
     }
   });
-  

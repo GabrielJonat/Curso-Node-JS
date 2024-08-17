@@ -3,9 +3,11 @@ const User = require('../models/user')
 const Adoption = require('../models/adoption')
 const Talk = require('../models/talk')
 const Message = require('../models/message')
+const Profile = require('../models/profile')
 const session = require('express-session')
 const axios = require('axios')
 const { use } = require('../routes/thoughtsRoutes')
+const { Op } = require('sequelize');
 
 module.exports = class ThoughtController{
 
@@ -63,6 +65,7 @@ module.exports = class ThoughtController{
         const adoption = await Adoption.findAll()
         let ids = []
         let thoughtIds = []
+        const adopters = {}
         thoughts.forEach(ele => {
 
             thoughtIds.push(ele.id)
@@ -71,12 +74,17 @@ module.exports = class ThoughtController{
 
             if(thoughtIds.includes(adp.ThoughtId))
                 ids.push(adp.ThoughtId)
+                adopters[adp.ThoughtId] = adp.UserId
         })
         thoughts.forEach(ele => {
-            if(ids.includes(ele.id))
+            if(ids.includes(ele.id)){
                 ele.case = true
-            else
+                ele.requester = adopters[ele.id]
+            }
+            else{
                 ele.case = false
+                ele.requester = 0
+            }
         }) 
         let empty = false
         if(!thoughts.length > 0)
@@ -95,6 +103,45 @@ module.exports = class ThoughtController{
         const id = req.params.id
         const thought = await Thought.findOne({where: {id:id}, raw: true})
         res.render('thoughts/edit', {session: req.session, thought:thought})
+       
+    }
+
+    static async editUser(req,res){
+
+        const id = req.session.userId
+        const user = await User.findOne({where: {id:id}, raw: true})
+        const profile = await Profile.findOne({where: {userId:id}, raw: true})
+        res.render('thoughts/userEdit', {session: req.session, profile, user})
+    }
+
+    static async editUserPost(req,res){
+
+        const id = req.params.id
+        const profile = {
+            
+            state: req.body.state,
+            city: req.body.city,
+            description: req.body.description,
+            userId: id,
+        }
+        if(req.file){
+            const image = `/uploads/${req.file.filename}`;
+            profile.image = image    
+        }
+            const user = {
+
+            name: req.body.name,
+            email: req.body.email,
+        }
+
+        await User.update(user,{where: {id:id}})
+        await Profile.update(profile,{where: {userId:id}})
+        
+        req.flash('message', 'Perfil editado com sucesso!')
+        req.session.save(() => {
+
+            res.redirect('/thoughts/profile')
+        })
        
     }
 
@@ -216,7 +263,8 @@ module.exports = class ThoughtController{
                     UserId: userId,
                     ThoughtId: thought.id
                 }
-                await Adoption.create(adoption)
+                const createdAdoption = await Adoption.create(adoption)
+                console.log(createdAdoption)
                 req.flash('message', 'Adoção requisitada com sucesso, aguardando resposta do dono!')
                 req.session.save(() => {
 
@@ -251,6 +299,7 @@ module.exports = class ThoughtController{
 
         const user = await User.findOne({where: {id:req.session.userId}})
         const adoptions = await Adoption.findAll({where: {UserId:req.session.userId},})
+        let userThoughts = []
         let empty = false
         const util = new Set()
         if(!adoptions)
@@ -261,11 +310,12 @@ module.exports = class ThoughtController{
             const user = await User.findOne({where:{id:thought.UserId}})
             thought.ownerEmail = user.email
             const talks = await Talk.findOne({where: {user1:req.session.userId,user2:user.id}})
-            const talks2 = await Talk.findOne({where: {user1:user.id,user2:req.session.userId}})
-            console.log(talks,talks2)    
-            if(!(talks || talks2)){
+            const talks2 = await Talk.findOne({where: {user1:user.id,user2:req.session.userId}})    
+            if(!talks && !talks2){
 
                 await Talk.create({user1:req.session.userId,user2:user.id})
+            }
+            else{
             }
             util.add(thought.ownerEmail)
             }
@@ -273,12 +323,22 @@ module.exports = class ThoughtController{
         const thoughts = await Thought.findAll({where: {UserId:req.session.userId}})
         thoughts.forEach(async value => {
 
+            userThoughts.push(value.id)
             const owner = await User.findOne({where: {id:value.adopter}})
             if(owner){
+
                 util.add(owner.email)
             }
         })
-        console.log(util)
+        const adoptions2 = await Adoption.findAll()
+        adoptions2.forEach(async value => {
+
+            if(userThoughts.includes(value.ThoughtId)){
+
+                const subject = await User.findOne({where: {id:value.UserId}})
+                util.add(subject.email)
+            }
+        })
         res.render('thoughts/friends', {session: req.session, user:user, empty:empty, util:util})
     }
 
@@ -323,14 +383,73 @@ module.exports = class ThoughtController{
             const friend = await User.findOne({where: {email:email}})
             const user = await User.findOne({where: {id:req.session.userId}})
             const talk = await Talk.findOne({where: {user1:user.id, user2: friend.id}})
+            const profile = await Profile.findOne({where: {userId:user.id}})
             let pk
             if(!talk){
                 const substitute = await Talk.findOne({where: {user1:friend.id, user2: user.id}})
                 pk = `${substitute.user1} ${substitute.user2}`
             }
             else{
+                console.log(talk.user1, talk.user2)
                 pk = `${talk.user1} ${talk.user2}`
             }
-            res.render('chat/talk', {session: req.session,friend,user, pk})        
+            console.log(pk)
+            res.render('chat/talk', {session: req.session,friend,user, pk,profile})        
+    }
+
+    static async viewProfile(req,res){
+
+        const user = await User.findOne({where: {id:req.session.userId}})
+        const profile = await Profile.findOne({where: {userId:req.session.userId}})
+        const pets = await Thought.findAll({where:{UserId:req.session.userId}})
+        let qtdAdopted = 0
+        let qtdPets = pets.length
+        pets.forEach(thought => {
+
+            if(thought.adopter){
+
+                qtdAdopted++;
+            }
+        })
+        let selfView = true
+        res.render('thoughts/profile', {session: req.session,user,profile,qtdAdopted,qtdPets,selfView})        
+    }
+
+    static async viewUserProfile(req,res){
+
+        const name = req.params.name
+        const user = await User.findOne({where: {name:name}})
+        const profile = await Profile.findOne({where: {userId:user.id}})
+        const pets = await Thought.findAll({where:{UserId:user.id}})
+        let qtdAdopted = 0
+        let qtdPets = pets.length
+        pets.forEach(thought => {
+
+            if(thought.adopter){
+
+                qtdAdopted++;
+            }
+        })
+        let selfView = false
+        res.render('thoughts/profile', {session: req.session,user,profile,qtdAdopted,qtdPets,selfView})        
+    }
+
+    static async viewUserProfileById(req,res){
+
+        const name = req.params.id
+        const user = await User.findOne({where: {id:name}})
+        const profile = await Profile.findOne({where: {userId:user.id}})
+        const pets = await Thought.findAll({where:{UserId:user.id}})
+        let qtdAdopted = 0
+        let qtdPets = pets.length
+        pets.forEach(thought => {
+
+            if(thought.adopter){
+
+                qtdAdopted++;
+            }
+        })
+        let selfView = false
+        res.render('thoughts/profile', {session: req.session,user,profile,qtdAdopted,qtdPets,selfView})        
     }
 }
